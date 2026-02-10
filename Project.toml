@@ -1,0 +1,7 @@
+name = "RidgeRegression"
+uuid = "739161c8-60e1-4c49-8f89-ff30998444b1"
+authors = ["Vivak Patel <vp314@users.noreply.github.com>"]
+version = "0.1.0"
+
+[compat]
+julia = "1.12.4"
