@@ -14,7 +14,7 @@
 <!--- What types of changes does your code introduce? Put an `x` in all the boxes that apply: -->
 - [ ] CI <!--- Changes to the continuous integration configuration -->
 - [ ] Docs <!--- Documentation only changes -->
-- [ ] Feature <!--- Non-breaking changes that adds a new feature -->
+- [ ] Feature <!--- Non-breaking change that adds a new feature -->
 - [ ] Fix <!--- Non-breaking change which addresses an issue -->
 - [ ] Performance <!--- A code change that improves performance -->
 - [ ] Refactor <!--- Non-breaking change that neither fixes a bug nor adds a feature -->
