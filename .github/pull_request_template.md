@@ -26,7 +26,7 @@
 <!--- Go over all the following points, and put an `x` in all the boxes that apply. -->
 
 **Code and Comments**
-If this PR includes modification to the code base, please select all that apply.
+If this PR includes modifications to the code base, please select all that apply.
 - [ ] My code follows the code style of this project.
 - [ ] I have updated all package dependencies (if any).
 - [ ] I have included all relevant files to realize the functionality of the PR. 
