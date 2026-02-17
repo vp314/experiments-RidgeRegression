@@ -1,5 +1,5 @@
 <!--- Provide a general summary of your changes in the Title above -->
-<!--- Please be sure to request review from @Vivak -->
+<!--- Please request review from the appropriate code owners or maintainers -->
 
 ## Description
 <!--- Describe your changes in detail and include references -->
