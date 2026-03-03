@@ -14,7 +14,7 @@ In addition to dimensional regime, matrix conditioning will be incorporated as a
 
 | Blocking System | Factor | Blocks |
 |:----------------|:-------|:-------|
-| Dataset | Dimensional regime (\(p/n\)) | \( p \ll n \), \( p = n \), \( p \gg n \) |
+| Dataset | Dimensional regime (\(p/n\)) | $(p \ll n)$, $(p \approx n)$, $(p \gg n)$|
 | Matrix conditioning | Condition number of \( X \) or \( X^T X \) | Low, Medium, High |
 # Treatments
 The treatments are the ridge regression solution methods:
