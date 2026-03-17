@@ -1,9 +1,3 @@
-using CSV
-using DataFrames
-using Downloads
-
-export Dataset, csv_dataset
-
 """
     Dataset(name, X, y)
 
@@ -17,8 +11,8 @@ Contains datasets for ridge regression experiments.
 # Throws
 - `ArgumentError`: If rows in `X` does not equal length of `y`.
 
-# Notes
-Used as the experimental unit for ridge regression experiments.
+!!! note
+    Used as the experimental unit for ridge regression experiments.
 """
 struct Dataset
     name::String
