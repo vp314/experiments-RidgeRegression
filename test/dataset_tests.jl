@@ -2,7 +2,7 @@ using Test
 using DataFrames
 using CSV
 
-include("../src/dataset.jl")
+using RidgeRegression
 @testset "Dataset" begin
     X = [1 2; 3 4]
     y = [10, 20]

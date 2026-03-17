@@ -53,28 +53,25 @@ function one_hot_encode(Xdf::DataFrame; drop_first::Bool = true)::Matrix{Float64
     n = nrow(Xdf)
     cols = Vector{Vector{Float64}}()
 
-    for name in names(Xdf)
+    for name in names(Xdf) #Selecting columns that aren't the target variable and pushing them to the columns.
         col = Xdf[!, name]
         if eltype(col) <: Real
             push!(cols, Float64.(col))
             continue
         end
 
-        scol = string.(col)
-        lv = unique(scol)
-        ind = scol .== permutedims(lv)
+        scol = string.(col) # Convert to string for categorical processing.
+        lv = unique(scol) #Get unique category levels.
+        ind = scol .== permutedims(lv) #Create indicator matrix for each level of the categorical variable.
+        #Permutedims is used to align the dimensions for broadcasting.
+        #Broadcasting compares each element of `scol` with each level in `lv`, resulting in a matrix where each column corresponds to a level and contains `true` for rows that match that level and `false` otherwise.
 
-        println("Variable: $name")
-        for (j, level) in enumerate(lv)
-            println("  Dummy column (before drop) $j → $name = $level")
-        end
-
-        if drop_first && size(ind, 2) > 1
+        if drop_first && size(ind, 2) > 1 #Drop the first column of the indicator matrix to avoid multicollinearity if drop_first is true and there are multiple levels.
             ind = ind[:, 2:end]
         end
 
         for j in 1:size(ind, 2)
-            push!(cols, Float64.(ind[:, j]))
+            push!(cols, Float64.(ind[:, j])) #Convert the boolean indicator columns to Float64 and add them to the list of columns.
         end
     end
 
@@ -93,17 +90,14 @@ end
 Load a dataset from a CSV file or URL.
 
 # Arguments
-- `path_or_url::String`
-    Local file path or web URL that has CSV data.
+- `path_or_url::String`: Local file path or web URL containing CSV data.
 
-- `target_col`
-    Column index OR column name containing the response variable.
-
-- `name::String`
-    Dataset name.
+# Keyword Arguments
+- `target_col`: Column index or column name containing the response variable.
+- `name::String="csv_dataset"`: Dataset name.
 
 # Returns
-`Dataset`
+A `Dataset`.
 """
 function csv_dataset(path_or_url::String;
     target_col,
@@ -115,13 +109,13 @@ function csv_dataset(path_or_url::String;
         Downloads.download(path_or_url) :
         path_or_url
 
-    df = DataFrame(CSV.File(filepath))
-    df = dropmissing(df)
-    Xdf = select(df, DataFrames.Not(target_col))
+    df = DataFrame(CSV.File(filepath)) #Read CSV file into a DataFrame.
+    df = dropmissing(df) #Remove rows with missing values.
+    Xdf = select(df, DataFrames.Not(target_col)) #Select all columns except the target column for features.
 
     y = target_col isa Int ?
-        df[:, target_col] :
-        df[:, Symbol(target_col)]
+        df[:, target_col] : #If target_col is an integer, use it as a column index to extract the target variable from the DataFrame.
+        df[:, Symbol(target_col)] #Extract the target variable based on whether target_col is an index or a name.
 
 
     X = one_hot_encode(Xdf; drop_first = true)
