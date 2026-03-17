@@ -28,20 +28,19 @@ struct Dataset
 end
 
 """
-    one_hot_encode(dataset::Dataset; drop_first=true)
+    one_hot_encode(Xdf::DataFrame; drop_first=true)
 
-One-hot encode categorical (string-like) features in `dataset.X`.
+One-hot encode categorical (string-like) features in `Xdf`.
 
 # Arguments
-- `dataset::Dataset`: Input dataset containing feature matrix `X`
-  and response vector `y`.
+- `Xdf::DataFrame`: Input DataFrame containing features and response vector `y`.
 
 # Keyword Arguments
 - `drop_first::Bool=true`: If `true`, drop the first dummy column for
   each categorical feature to avoid multicollinearity.
 
 # Returns
-A new `Dataset` with numeric `X` and unchanged `y`.
+- `Matrix{Float64}`: A numeric matrix containing the encoded feature.
 """
 function one_hot_encode(Xdf::DataFrame; drop_first::Bool = true)::Matrix{Float64}
     n = nrow(Xdf)
@@ -91,7 +90,7 @@ Load a dataset from a CSV file or URL.
 - `name::String="csv_dataset"`: Dataset name.
 
 # Returns
-A `Dataset`.
+- `Dataset`: A dataset containing the encoded feature matrix `X`, response vector `y`, and dataset name.
 """
 function csv_dataset(path_or_url::String;
     target_col,
