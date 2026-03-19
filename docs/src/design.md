@@ -11,7 +11,7 @@ Which ridge regression algorithm is provides the best balance between:
 
 - Numerical stability
 - Computational costs
-- 
+
 # Experimental Units
 The experimental units are the datasets under fixed penalty weights. For each experimental unit, all treatments will be applied to the dataset. This will be done so that differences in performance can be attributed to the algorithms themselves rather than the data. Each dataset will contain a matrix ${X}$, a response vector $\mathbf{y}$, and a regularization parameter ${\lambda}$ for some specific ${\lambda}$. Owing to the statistical behavior of ridge regression algorithms depends strongly on the dimensional structure of the problem, a blocking system will be used. 
 
@@ -75,7 +75,7 @@ The observational units are each algorithm-dataset pair. For each combination we
 | `algorithm` | String | Ridge regression solution method used: `GradientDescent`, `SGD`, or `DirectMethod`. |
 | `runtime_seconds` | Positive Floating-point | Time required for the algorithm to compute a solution. |
 | `iterations` | Positive Integer | Number of iterations performed by the algorithm (`NA` for direct methods). |
-| `residual_norm` | Positive Floating-point | Norm, measuring how well the solution fits the regression problem. |
+| `beta_error`| Positive Floating-point| Norm, measuring the difference between the estimated regression coefficients and the true coefficients
 
 The collected measurements will be written to a CSV file. Each row in the file corresponds to a single algorithm–dataset pair, which forms the observational unit of the experiment. The columns represent the recorded measurements. After the experiment, the resulting CSV file should contain ${Algorithms * Datasets}$ number of rows and each row will contain exactly eight columns.
 
