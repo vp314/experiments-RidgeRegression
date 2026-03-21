@@ -1,7 +1,6 @@
 using Test
 using DataFrames
 using CSV
-
 using RidgeRegression
 @testset "Dataset" begin
     X = [1 2; 3 4]
