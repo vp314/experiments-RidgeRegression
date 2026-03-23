@@ -6,6 +6,6 @@ using Downloads
 
 include("dataset.jl")
 
-export Dataset, csv_dataset, one_hot_encode
+export Dataset, load_csv_dataset, one_hot_encode
 
 end
