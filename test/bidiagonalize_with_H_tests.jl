@@ -1,40 +1,4 @@
-using Test
-using LinearAlgebra
-using RidgeRegression
-
-@testset "compute_givens" begin
-    c, s = compute_givens(3.0, 0.0)
-    @test c == 1.0
-    @test s == 0.0
-    a = 3.0
-    b = 4.0
-    c, s = compute_givens(a, b)
-    v1 = c*a + s*b
-    v2 = -s*a + c*b
-    @test isapprox(v2, 0.0; atol=1e-12, rtol=0)
-    @test isapprox(abs(v1), hypot(a, b); atol=1e-12, rtol=0)
-    @test_throws ArgumentError compute_givens(0.0, 2.0)
-end
-@testset "rotate_rows!" begin
-    M = [1.0 2.0;
-         3.0 4.0]
-
-    c, s = compute_givens(1.0, 3.0)
-    rotate_rows!(M, 1, 2, c, s)
-
-    @test isapprox(M[2, 1], 0.0; atol=1e-12, rtol=0)
-end
-
-@testset "rotate_cols!" begin
-    M = [3.0 4.0;
-         1.0 2.0]
-
-    c, s = compute_givens(3.0, 4.0)
-    rotate_cols!(M, 1, 2, c, s)
-
-    @test isapprox(M[1, 2], 0.0; atol=1e-12, rtol=0)
-end
-@testset "bidiagonalize_with_H basic properties" begin
+@testset "Testset 4" begin
     A = [1.0 2.0 3.0;
          4.0 5.0 6.0;
          7.0 8.0 10.0]
@@ -62,7 +26,7 @@ end
     @test L * K ≈ C
 end
 
-@testset "bidiagonalize_with_H produces upper bidiagonal matrix" begin
+@testset "Testset 5" begin
     A = [2.0 1.0 3.0;
          4.0 5.0 6.0;
          7.0 8.0 9.0]
@@ -84,7 +48,7 @@ end
     end
 end
 
-@testset "bidiagonalize_with_H rectangular tall matrix" begin
+@testset "Testset 6" begin
     A = [1.0 2.0 3.0;
          4.0 5.0 6.0;
          7.0 8.0 9.0;
@@ -120,7 +84,7 @@ end
     end
 end
 
-@testset "bidiagonalize_with_H identity-like simple case" begin
+@testset "Testset 7" begin
     A = [3.0 0.0;
          4.0 5.0]
 

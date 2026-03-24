@@ -1,11 +1,10 @@
 module RidgeRegression
 using CSV
 using DataFrames
-using Downloads
+using LinearAlgebra
 
-export Dataset, csv_dataset, one_hot_encode
+include("bidiagonalization.jl")
 
-include("dataset.jl")
-
+export compute_givens, rotate_rows!, rotate_cols!, bidiagonalize_with_H
 
 end
