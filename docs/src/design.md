@@ -2,7 +2,7 @@
 Many modern science problems involve regression problems with extremely large numbers of predictors. Genome-wide association studies (GWAS), for example, try to identify genetic variants associated with a disease phenotype using hundreds of thousands or millions of genomic features. In such settings, traditional least squares methods fail because noise and ill-conditioning. Penalized Least Squares (PLS) extends ordinary least squares (OLS) regression by adding a penalty term to shrink parameter estimates. Ridge regression, an approach within PLS, adds a regularization term, producing a regularized estimator. 
 
 Mathematically, ridge regression estimates the regression coefficients by solving the penalized least squares problem
-$$
+$
 \hat{\boldsymbol{\beta}} =
 \arg\min_{\boldsymbol{\beta}}
 \left(
@@ -10,7 +10,7 @@ $$
 +
 \lambda \| \boldsymbol{\beta} \|^2
 \right)
-$$
+$
 where $\lambda > 0$ is a regularization parameter that controls the strength of the penalty.
 
 The purpose of ridge regression is to stabilize regression estimates where the predictors are highly correlated or the design matrix $X$ is almost singular. Ridge regression shrinks the estimated coefficient vector in a way such that the coefficient estimates minimize the sum of squared residuals subject to a constraint on the $\ell_2$ norm of the coefficient vector, $\|\boldsymbol{\beta}\|^2 \leq t$, which shrinks the least squares estimates toward the origin. This reduces the variance of the coefficient estimates and mitigates the effects of multicollinearity.
