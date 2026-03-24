@@ -1,18 +1,19 @@
 using RidgeRegression
 using Test
 using DataFrames
-using CSV
+using LinearAlgebra
 
 @testset "RidgeRegression.jl" begin
-    @testset "Dataset tests" begin
+    @testset "Dataset Tests" begin
         include("dataset_tests.jl")
     end
 
-    @testset "Encoding tests" begin
+    @testset "One-Hot Encoding Tests" begin
         include("encoding_tests.jl")
     end
 
-    @testset "Load CSV dataset tests" begin
+    @testset "Load CSV Dataset Tests" begin
         include("load_csv_dataset_tests.jl")
     end
+
 end
