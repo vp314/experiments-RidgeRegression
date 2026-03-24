@@ -1,5 +1,6 @@
 using RidgeRegression
 using Test
+using LinearAlgebra
 
 @testset "RidgeRegression.jl" begin
     @testset "Compute Givens Rotations Tests" begin
@@ -16,5 +17,9 @@ using Test
 
     @testset "Bidiagonalization Tests" begin
         include("bidiagonalize_with_H_tests.jl")
+    end
+
+    @testset "Applying Ht to b Tests" begin
+        include("apply_Ht_to_b_test.jl")
     end
 end

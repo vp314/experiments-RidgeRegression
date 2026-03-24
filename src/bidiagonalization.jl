@@ -117,11 +117,6 @@ function bidiagonalize_with_H(A::AbstractMatrix, L::AbstractMatrix, b::AbstractV
                 c, s = compute_givens(B[i, i], B[j, i]) #Build Givens rotation to zero B[j, i]
                 rotate_rows!(B, i, j, c, s) #Apply the Givens rotation to rows i and j of B
                 rotate_rows!(Ht, i, j, c, s) #Accumulate the left transformations in Ht
-
-                temp = bhat[i]
-                bhat[i] = c*temp + s*bhat[j]
-                bhat[j] = -conj(s)*temp + c*bhat[j] #Applying same left rotation to bhat, bhat tracks how b is transformed by the left transformations.
-
                 B[j, i] = zero(eltype(B))
             end
         end
@@ -142,5 +137,29 @@ function bidiagonalize_with_H(A::AbstractMatrix, L::AbstractMatrix, b::AbstractV
     end
 
     H = transpose(Ht)
+    bhat = apply_Ht_to_b(Ht, b)
     return B, C, H, K, Ht, bhat
+end
+
+"""
+    apply_Ht_to_b(Ht::AbstractMatrix, b::AbstractVector)
+
+Apply the accumulated left orthogonal transformation `H'` (stored as `Ht`)
+to the constant vector `b`.
+
+# Arguments
+- `Ht::AbstractMatrix`: The transpose of the orthogonal left factor `H`.
+- `b::AbstractVector`: The vector to be transformed.
+
+# Returns
+- `bhat::AbstractVector`: The transformed vector satisfying `bhat = Ht * b`.
+
+# Throws
+- `DimensionMismatch`: If the number of columns of `Ht` does not match the length of `b`.
+"""
+function apply_Ht_to_b(Ht::AbstractMatrix, b::AbstractVector)
+    size(Ht, 2) == length(b) || throw(DimensionMismatch(
+        "Ht has $(size(Ht, 2)) columns but b has length $(length(b))"
+    ))
+    return Ht * b
 end
