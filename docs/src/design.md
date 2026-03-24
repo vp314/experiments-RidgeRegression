@@ -2,14 +2,14 @@
 Many modern science problems involve regression problems with extremely large numbers of predictors. Genome-wide association studies (GWAS), for example, try to identify genetic variants associated with a disease phenotype using hundreds of thousands or millions of genomic features. In such settings, traditional least squares methods fail because noise and ill-conditioning. Penalized Least Squares (PLS) extends ordinary least squares (OLS) regression by adding a penalty term to shrink parameter estimates. Ridge regression, an approach within PLS, adds a regularization term, producing a regularized estimator. 
 
 Mathematically, ridge regression estimates the regression coefficients by solving the penalized least squares problem
-$
+${
 \hat{\boldsymbol{\beta}} =
 \arg\min_{\boldsymbol{\beta}}
 \left(
 \| \mathbf{y} - X\boldsymbol{\beta} \|^2
 +
 \lambda \| \boldsymbol{\beta} \|^2
-\right)
+\right)}
 $
 where $\lambda > 0$ is a regularization parameter that controls the strength of the penalty.
 
@@ -21,13 +21,9 @@ The goal of this experiment is to investigate the performance of these algorithm
 # Questions
 The primary goal of this experiment is to compare numerical algorithms for computing ridge regression estimates under various conditions. In particular, we aim to address the following questions:
 
-1. How does algorithm performance vary across regression problems with different dimensional regimes?
+1. How does the performance of ridge regression algorithms change as the structural and numerical properties of the regression problem vary?
 
-2. How does the sparsity structure of the design matrix $X$ influence computational efficiency and convergence behavior of different algorithms?
-
-3. How does the magnitude of the ridge penalty parameter $\lambda$, which affects the conditioning of $X^\top X + \lambda I$, influence numerical stability and runtime across algorithms?
-
-4. Which algorithm provides the best tradeoff between numerical stability and computational cost across these varying problem regimes?
+2. Which ridge regression algorithm provides the best balance between numerical stability and computational cost across these problem regimes?
 
 # Experimental Units
 The experimental units are the datasets under fixed penalty weights. For each experimental unit, all treatments will be applied to the dataset. This will be done so that differences in performance can be attributed to the algorithms themselves rather than the data. Each dataset will contain a matrix ${X}$, a response vector $\mathbf{y}$, and a regularization parameter ${\lambda}$ for some specific ${\lambda}$. 
