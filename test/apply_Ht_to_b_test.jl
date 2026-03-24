@@ -6,11 +6,10 @@
 end
 
 @testset "Testset 2" begin
-    Ht = [
-        1.0  0.0  0.0;
+    Ht =[1.0  0.0  0.0;
         0.0  0.0  1.0;
-        0.0  1.0  0.0
-    ]
+        0.0  1.0  0.0]
+
     b = [4.0, 5.0, 6.0]
 
     @test apply_Ht_to_b(Ht, b) == [4.0, 6.0, 5.0]
@@ -19,10 +18,9 @@ end
 @testset "Testset 3" begin
     c, s = 3/5, 4/5
 
-    Ht = [
-         c   s;
-        -s   c
-    ]
+    Ht =[c   s;
+        -s   c]
+
     b = [5.0, 0.0]
 
     @test apply_Ht_to_b(Ht, b) ≈ [3.0, -4.0]
