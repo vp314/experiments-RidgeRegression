@@ -3,6 +3,7 @@ module RidgeRegression
 using CSV
 using DataFrames
 using Downloads
+using LinearAlgebra
 
 include("dataset.jl")
 
