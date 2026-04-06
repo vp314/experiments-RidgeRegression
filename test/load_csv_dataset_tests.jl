@@ -1,4 +1,4 @@
-@testset "Testset 1" begin
+@testset "load_csv_dataset drops missing rows and uses target column" begin
     tmp = tempname() * ".csv"
 
     df = DataFrame(
@@ -18,7 +18,7 @@
     @test (3, 2) == size(d.X)
 end
 
-@testset "Testset 2" begin
+@testset "load_csv_dataset drops missing rows and uses target column by index" begin
     tmp = tempname() * ".csv"
 
     df = DataFrame(

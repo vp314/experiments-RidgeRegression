@@ -1,4 +1,4 @@
-@testset "Testset 1" begin
+@testset "Dataset constructor stores fields correctly" begin
     X = [1 2; 3 4]
     y = [10, 20]
     d = Dataset("toy", X, y)
@@ -12,7 +12,7 @@
     @test 20.0 == d.y[2]
 end
 
-@testset "Testset 2" begin
+@testset "Dataset constructor throws error for mismatched dimensions" begin
     X = [1 2; 3 4]
 
     @test_throws ArgumentError Dataset("bad", X, [1, 2, 3])

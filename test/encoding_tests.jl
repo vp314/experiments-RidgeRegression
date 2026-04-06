@@ -1,4 +1,4 @@
-@testset "Testset 1" begin
+@testset "one_hot_encode encodes specified categorical columns and keeps numeric columns" begin
     df = DataFrame(
         A = ["red", "blue", "red", "green"],
         B = [1, 2, 3, 4],
@@ -14,7 +14,7 @@
     @test all(vec(sum(X[:, 4:5]; dims=2)) .<= 1)
 end
 
-@testset "Testset 2" begin
+@testset "one_hot_encode throws error for invalid column specifications" begin
     df = DataFrame(
         A = ["red", "blue", "red", "green"],
         B = [1, 2, 3, 4],
@@ -24,7 +24,7 @@ end
     @test_throws ArgumentError one_hot_encode(df; cols_to_encode=[:A], drop_first=true)
 end
 
-@testset "Testset 3" begin
+@testset "one_hot_encode supports integer-coded categorical columns when specified" begin
     df = DataFrame(
         group = [1, 2, 1, 3],
         x = [10.0, 20.0, 30.0, 40.0]
