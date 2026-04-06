@@ -2,6 +2,7 @@ using RidgeRegression
 using Test
 using DataFrames
 using LinearAlgebra
+using CSV
 
 @testset "RidgeRegression.jl" begin
     @testset "Dataset Tests" begin
