@@ -1,4 +1,4 @@
-@testset "Testset 4" begin
+@testset "bidiagonalize_with_H preserves orthogonality and factorization identities" begin
     A = [1.0 2.0 3.0;
          4.0 5.0 6.0;
          7.0 8.0 10.0]
@@ -26,7 +26,7 @@
     @test L * K ≈ C
 end
 
-@testset "Testset 5" begin
+@testset "bidiagonalize_with_H produces upper bidiagonal matrix" begin
     A = [2.0 1.0 3.0;
          4.0 5.0 6.0;
          7.0 8.0 9.0]
@@ -48,7 +48,7 @@ end
     end
 end
 
-@testset "Testset 6" begin
+@testset "bidiagonalize_with_H handles rectangular matrices" begin
     A = [1.0 2.0 3.0;
          4.0 5.0 6.0;
          7.0 8.0 9.0;
@@ -84,7 +84,7 @@ end
     end
 end
 
-@testset "Testset 7" begin
+@testset "bidiagonalize_with_H correctly zeroes subdiagonal entry in small matrix" begin
     A = [3.0 0.0;
          4.0 5.0]
 

@@ -1,4 +1,4 @@
-@testset "rotate_rows!" begin
+@testset "rotate_rows! correctly applies Givens rotation to rows" begin
     M = [1.0 2.0;
          3.0 4.0]
 

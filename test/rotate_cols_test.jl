@@ -1,4 +1,4 @@
-@testset "Testset 1" begin
+@testset "rotate_cols! zeros second column entry using Givens rotation" begin
     M = [3.0 4.0;
          1.0 2.0]
 
