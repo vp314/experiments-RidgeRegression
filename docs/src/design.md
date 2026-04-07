@@ -14,15 +14,9 @@ Mathematically, ridge regression estimates the regression coefficients by solvin
 \left(
 \| \mathbf{y} - X\boldsymbol{\beta} \|_2^2
 +
-<<<<<<< HEAD
 \lambda \| \boldsymbol{\beta} \|_2^2
-\right)}
-$
-=======
-\lambda \| \boldsymbol{\beta} \|^2
 \right)
 ```
->>>>>>> dc1059095c388a2124e2afcece8cadac9d57831b
 where $\lambda > 0$ is a regularization parameter that controls the strength of the penalty.
 
 The purpose of ridge regression is to stabilize regression estimates when the predictors are
@@ -169,4 +163,4 @@ The collected measurements will be written to a CSV file. Each row in the file c
 to a single algorithm–dataset pair, which forms the observational unit of the experiment.
 The columns represent the recorded measurements. After the experiment, the resulting CSV
 file should contain ${Algorithms∗Datasets}$ number of rows and each row will contain exactly
-11 columns.
+10 columns.
