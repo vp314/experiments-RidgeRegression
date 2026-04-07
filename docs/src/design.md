@@ -8,15 +8,21 @@ regression by adding a penalty term to shrink parameter estimates. Ridge regress
 approach within PLS, adds a regularization term, producing a regularized estimator. 
 
 Mathematically, ridge regression estimates the regression coefficients by solving the penalized least squares problem
-${
+```math
 \hat{\boldsymbol{\beta}} =
 \arg\min_{\boldsymbol{\beta}}
 \left(
 \| \mathbf{y} - X\boldsymbol{\beta} \|_2^2
 +
+<<<<<<< HEAD
 \lambda \| \boldsymbol{\beta} \|_2^2
 \right)}
 $
+=======
+\lambda \| \boldsymbol{\beta} \|^2
+\right)
+```
+>>>>>>> dc1059095c388a2124e2afcece8cadac9d57831b
 where $\lambda > 0$ is a regularization parameter that controls the strength of the penalty.
 
 The purpose of ridge regression is to stabilize regression estimates when the predictors are
