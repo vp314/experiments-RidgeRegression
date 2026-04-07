@@ -100,8 +100,9 @@ $\sigma_{\max}$ respectively. A weak regularization regime corresponds to $\lamb
 \sigma_{\min}^2$, where the ridge penalty begins to influence the smallest singular
 directions but the system remains moderately ill-conditioned. A moderate regularization
 regime corresponds to $\lambda \approx \sigma_{\min}\sigma_{\max}$, which substantially
-improves the conditioning of the problem by increasing the smallest eigenvalues of $X^\top X
-+ \lambda I$. Finally, a strong regularization regime corresponds to $\lambda \approx
+improves the conditioning of the problem by increasing the smallest eigenvalues of 
+$X^\top X+ \lambda I$.
+Finally, a strong regularization regime corresponds to $\lambda \approx
 \sigma_{\max}^2$, where the ridge penalty dominates the spectral scale of the problem and
 produces a well-conditioned system.
 
