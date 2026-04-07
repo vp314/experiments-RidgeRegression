@@ -57,7 +57,7 @@ generated, and each dataset forms an experimental unit. For every experimental u
 treatments are applied.
 
 Datasets will be grouped according to their dimensional regime, characterized as $p \ll n$,
-p ≈ n, and $p \gg n$. These regimes correspond to fundamentally different geometric
+$p ≈ n$, and $p \gg n$. These regimes correspond to fundamentally different geometric
 properties of the design matrix, including rank behavior, conditioning, and the stability of
 the normal equations.
 
