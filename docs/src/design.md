@@ -47,19 +47,13 @@ following questions:
 2. Which ridge regression algorithm provides the best balance between numerical stability and computational cost across these problem regimes?
 
 # Experimental Units
-The experimental units are the datasets under fixed penalty weights. Each dataset will
-contain a matrix $X \in \mathbb{R}^{n \times p}$, a response vector $\mathbf{y} \in \mathbb{R}^n$, and a regularization parameter ${\lambda}$ for some specific ${\lambda}$. 
-
 Blocks are defined by combinations of the experimental blocking factors, including
-dimensional regime, matrix sparsity, and ridge penalty magnitude. Each block represents
-datasets with similar structural properties. Within each block, multiple datasets will be
-generated, and each dataset forms an experimental unit. For every experimental unit all
-treatments are applied.
+dimensional regime, matrix sparsity, and ridge penalty magnitude. 
 
 Datasets will be grouped according to their dimensional regime, characterized as $p \ll n$,
 $p ≈ n$, and $p \gg n$. These regimes correspond to fundamentally different geometric
 properties of the design matrix, including rank behavior, conditioning, and the stability of
-the normal equations.
+the normal equations. All of which impact the performance of numerical algorithms.
 
 In addition to dimensional block, the strength of the ridge penalty will be incorporated as
 a secondary blocking factor. The ridge estimator is $\hat{\beta_R} = (X^\top X + \lambda
@@ -83,7 +77,7 @@ V \,\mathrm{diag}(\sigma_1^2+\lambda,\dots,\sigma_p^2+\lambda)\, V^\top .
 ```
 
 ```math
-\kappa_2(X^\top X+\lambda I)
+\kappa(X^\top X+\lambda I)
 =
 \frac{\sigma_{\max}^2+\lambda}{\sigma_{\min}^2+\lambda}.
 ```
@@ -93,7 +87,32 @@ of the system they solve, the ridge penalty effectively creates regression probl
 different numerical difficulty. This provides a way to assess how algorithm performance,
 convergence behavior, and computational cost depend on the numerical stability of the
 problem. 
-
+Recall that,
+```math
+\kappa(X^\top X + \lambda I)
+=
+\frac{\sigma_{\max}^2 + \lambda}{\sigma_{\min}^2 + \lambda},
+```
+Where $\sigma_{\min}$ and $\sigma_{\max}$ denote the smallest and largest
+singular values of $X$. Given a target condition number $c > 1$, we solve for
+$\lambda$ by setting
+```math
+\frac{\sigma_{\max}^2 + \lambda}{\sigma_{\min}^2 + \lambda} = c,
+```
+Which implies
+```math
+\sigma_{\max}^2 + \lambda
+=
+c(\sigma_{\min}^2 + \lambda).
+```
+Rearranging gives
+```math
+\sigma_{\max}^2 - c\,\sigma_{\min}^2 = (c - 1)\lambda,
+```
+and therefore
+```math
+\lambda = \frac{\sigma_{\max}^2 - c\,\sigma_{\min}^2}{c - 1}.
+```
 In this experiment, the magnitude of $\lambda$ is selected relative to the smallest non-zero
 singular values and largest singular values of $X$ denoted $\sigma_{\min}$ and
 $\sigma_{\max}$ respectively. A weak regularization regime corresponds to $\lambda \approx
