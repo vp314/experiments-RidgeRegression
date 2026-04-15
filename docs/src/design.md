@@ -94,36 +94,25 @@ Recall that,
 \frac{\sigma_{\max}^2 + \lambda}{\sigma_{\min}^2 + \lambda},
 ```
 Where $\sigma_{\min}$ and $\sigma_{\max}$ denote the smallest and largest
-singular values of $X$. Given a target condition number $c > 1$, we solve for
-$\lambda$ by setting
+singular values of $X$. Given a target condition number of the form, $1+\epsilon$ with $\epsilon > 0$, we solve for $\lambda$ by setting
 ```math
-\frac{\sigma_{\max}^2 + \lambda}{\sigma_{\min}^2 + \lambda} = c,
+\frac{\sigma_{\max}^2 + \lambda}{\sigma_{\min}^2 + \lambda} = 1+\epsilon,
 ```
 Which implies
 ```math
 \sigma_{\max}^2 + \lambda
 =
-c(\sigma_{\min}^2 + \lambda).
+(1+\epsilon)(\sigma_{\min}^2 + \lambda).
 ```
 Rearranging gives
 ```math
-\sigma_{\max}^2 - c\,\sigma_{\min}^2 = (c - 1)\lambda,
+\sigma_{\max}^2 - (1+\epsilon)\,\sigma_{\min}^2 = (\epsilon)\lambda,
 ```
 and therefore
 ```math
-\lambda = \frac{\sigma_{\max}^2 - c\,\sigma_{\min}^2}{c - 1}.
+\lambda = \frac{\sigma_{\max}^2 - (1+\epsilon)\,\sigma_{\min}^2}{\epsilon}.
 ```
-In this experiment, the magnitude of $\lambda$ is selected relative to the smallest non-zero
-singular values and largest singular values of $X$ denoted $\sigma_{\min}$ and
-$\sigma_{\max}$ respectively. A weak regularization regime corresponds to $\lambda \approx
-\sigma_{\min}^2$, where the ridge penalty begins to influence the smallest singular
-directions but the system remains moderately ill-conditioned. A moderate regularization
-regime corresponds to $\lambda \approx \sigma_{\min}\sigma_{\max}$, which substantially
-improves the conditioning of the problem by increasing the smallest eigenvalues of 
-$X^\top X+ \lambda I$.
-Finally, a strong regularization regime corresponds to $\lambda \approx
-\sigma_{\max}^2$, where the ridge penalty dominates the spectral scale of the problem and
-produces a well-conditioned system.
+In this experiment, the magnitude of $\lambda$ is selected indirectly through a choice of $\epsilon$. A strong regularization regime corresponds to small values of $\epsilon$ when the condition number is approximately $1 + \epsilon$. A moderate regularization corresponds to intermediate values of $\epsilon$ where the condition number is reduced. A weak regularization regime corresponds to large values of $\epsilon$ where the condition number remains large and close to the unregularized condition number.
 
 If $X$ is rank deficient, then additional singular values equal to zero may occur, and in this case the condition number is undefined.
 
@@ -141,6 +130,8 @@ dimensional regimes, two sparsity levels, and two regularization strengths, then
 $3 * 2 * 2 = 12$ block combinations. We will also denote r to be the number of replicated
 datasets in each block. Here, we mean the number datasets within a block. The total number
 of experimental units is then ${b * r}$.
+
+The experimental units are the datasets. Each dataset consists of a design matrix and response vector, while the regularization parameter $\lambda$ is determined by the blocking structure through the choice of $\epsilon$.
 
 | Blocking System | Factor | Blocks |
 |:----------------|:-------|:-------|
