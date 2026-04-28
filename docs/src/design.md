@@ -154,11 +154,10 @@ datasets in each block. Here, we mean the number datasets within a block. The to
 of experimental units is then ${b * r}$.
 
 
-
 | Blocking System | Factor | Blocks |
 |:----------------|:-------|:-------|
 | Dataset | Dimensional regime | $(p \ll n)$, $(p \approx n)$, $(p \gg n)$|
-| Ridge Penalty | Magnitude of ${\lambda}$ relative to the spectral scale of $X^\top X$ | Strong: \(\kappa \approx 10\), Moderate: \(\kappa \approx 10^3\), Weak: \(\kappa \approx 10^6\), with \(\lambda\) computed from the corresponding \(\epsilon\). |
+| Ridge Penalty | Magnitude of ${\lambda}$ relative to the spectral scale of $X^\top X$ | Strong: $\kappa \approx 10$, Moderate: $\kappa \approx 10^3$, Weak: $\kappa \approx 10^6$, with $\lambda$ computed from the corresponding $\epsilon$. |
 | Matrix Sparsity| Density of non-zero values in $X$ | Sparse (< 10% non-zero), Moderate (10%-50% non-zero), Dense (> 50% non-zero)|
 # Treatments
 
@@ -171,7 +170,7 @@ The treatments are the ridge regression solution methods:
  
  Since each experimental unit will recieves all t treatments, the total number of algorithm
  runs in the experiment is ${t * b * r}$. For this experiment, ${t=3}$. To ensure fair
- comparison between algorithms, each treatment will be applied under a fixed time
+ comparison between algorithms, each treatment will be applied under a fixed wall time
  constraint. Each algorithm will be run for a maximum of two hours per experimental unit. 
 # Observational Units and Measurements
 
