@@ -2,8 +2,7 @@
 Many modern science problems involve regression problems with extremely large numbers of
 predictors. Genome-wide association studies (GWAS), for example, try to identify genetic
 variants associated with a disease phenotype using hundreds of thousands or millions of
-genomic features. In such settings, traditional least squares methods fail because noise and
-ill-conditioning. Penalized Least Squares (PLS) extends ordinary least squares (OLS)
+genomic features. In such settings, traditional least squares methods fail. Penalized Least Squares (PLS) extends ordinary least squares (OLS)
 regression by adding a penalty term to shrink parameter estimates. Ridge regression, an
 approach within PLS, adds a regularization term, producing a regularized estimator. 
 
@@ -47,8 +46,17 @@ following questions:
 2. Which ridge regression algorithm provides the best balance between numerical stability and computational cost across these problem regimes?
 
 # Experimental Units
-Blocks are defined by combinations of the experimental blocking factors, including
-dimensional regime, matrix sparsity, and ridge penalty magnitude. 
+A block is defined as a collection of experimental units that share common characteristics
+which may influence the response. Blocking is introduced to control for
+variation and to enable meaningful comparisons of algorithm performance across
+different problem regimes.
+
+In this experiment, blocks are defined by combinations of three factors: dimensional
+regime, matrix sparsity, and ridge penalty magnitude. 
+
+The experimental units are the datasets. Each dataset consists of a design matrix $X$ and
+response vector $y$, with the regularization parameter $\lambda$ determined by the
+blocking structure through the choice of $\epsilon$.
 
 Datasets will be grouped according to their dimensional regime, characterized as $p \ll n$,
 $p ≈ n$, and $p \gg n$. These regimes correspond to fundamentally different geometric
@@ -112,9 +120,23 @@ and therefore
 ```math
 \lambda = \frac{\sigma_{\max}^2 - (1+\epsilon)\,\sigma_{\min}^2}{\epsilon}.
 ```
-In this experiment, the magnitude of $\lambda$ is selected indirectly through a choice of $\epsilon$. A strong regularization regime corresponds to small values of $\epsilon$ when the condition number is approximately $1 + \epsilon$. A moderate regularization corresponds to intermediate values of $\epsilon$ where the condition number is reduced. A weak regularization regime corresponds to large values of $\epsilon$ where the condition number remains large and close to the unregularized condition number.
+In this experiment, the ridge penalty parameter is not chosen directly, but is instead
+determined through a target level of conditioning. Because the ideal condition number
+of 1 cannot be achieved in practice, we instead aim for values of the form \(1 + \epsilon\),
+where \(\epsilon > 0\).
 
-If $X$ is rank deficient, then additional singular values equal to zero may occur, and in this case the condition number is undefined.
+A strong regularization regime corresponds to small values of \(\epsilon\), resulting
+in a well-conditioned system with condition number close to 1. Moderate
+regularization corresponds to intermediate values of \(\epsilon\), where the condition
+number is reduced but not minimal. Weak regularization corresponds to large values
+of \(\epsilon\), where the system remains relatively ill-conditioned and close to the
+unregularized case.
+
+If $X$ is rank deficient, then $\sigma _{min}=0$, then 
+```math
+\lambda =\frac{\sigma _{max}^2}{\epsilon}
+```
+So our method is robust in the case where $X$ is rank deficient.
 
 Another blocking factor that will be considered is how sparse or dense the matrix $X$ is.
 Many algorithms behave differently depending on whether the matrix is sparse or dense. In
@@ -131,12 +153,12 @@ $3 * 2 * 2 = 12$ block combinations. We will also denote r to be the number of r
 datasets in each block. Here, we mean the number datasets within a block. The total number
 of experimental units is then ${b * r}$.
 
-The experimental units are the datasets. Each dataset consists of a design matrix and response vector, while the regularization parameter $\lambda$ is determined by the blocking structure through the choice of $\epsilon$.
+
 
 | Blocking System | Factor | Blocks |
 |:----------------|:-------|:-------|
 | Dataset | Dimensional regime | $(p \ll n)$, $(p \approx n)$, $(p \gg n)$|
-| Ridge Penalty | Magnitude of ${\lambda}$ relative to the spectral scale of $X^\top X$ | Weak ($\lambda \approx \sigma_{\min}^2$), Moderate ($\lambda \approx \sigma_{\min}\sigma_{\max}$), Strong ($\lambda \approx \sigma_{\max}^2$), where $\sigma_{\min}$ and $\sigma_{\max}$ denote the smallest and largest singular values of $X$. |
+| Ridge Penalty | Magnitude of ${\lambda}$ relative to the spectral scale of $X^\top X$ | Strong: \(\kappa \approx 10\), Moderate: \(\kappa \approx 10^3\), Weak: \(\kappa \approx 10^6\), with \(\lambda\) computed from the corresponding \(\epsilon\). |
 | Matrix Sparsity| Density of non-zero values in $X$ | Sparse (< 10% non-zero), Moderate (10%-50% non-zero), Dense (> 50% non-zero)|
 # Treatments
 
