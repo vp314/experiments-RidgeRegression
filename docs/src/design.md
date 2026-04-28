@@ -122,14 +122,14 @@ and therefore
 ```
 In this experiment, the ridge penalty parameter is not chosen directly, but is instead
 determined through a target level of conditioning. Because the ideal condition number
-of 1 cannot be achieved in practice, we instead aim for values of the form \(1 + \epsilon\),
-where \(\epsilon > 0\).
+of 1 cannot be achieved in practice, we instead aim for values of the form $1 + \epsilon$,
+where $\epsilon > 0$.
 
-A strong regularization regime corresponds to small values of \(\epsilon\), resulting
+A strong regularization regime corresponds to small values of $\epsilon$, resulting
 in a well-conditioned system with condition number close to 1. Moderate
-regularization corresponds to intermediate values of \(\epsilon\), where the condition
+regularization corresponds to intermediate values of $\epsilon$, where the condition
 number is reduced but not minimal. Weak regularization corresponds to large values
-of \(\epsilon\), where the system remains relatively ill-conditioned and close to the
+of $\epsilon$, where the system remains relatively ill-conditioned and close to the
 unregularized case.
 
 If $X$ is rank deficient, then $\sigma _{min}=0$, then 
