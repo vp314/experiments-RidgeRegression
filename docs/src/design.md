@@ -1,12 +1,16 @@
 # Motivation and Background
 Many modern science problems involve regression problems with extremely large numbers of
-predictors. Genome-wide association studies (GWAS), for example, try to identify genetic
+predictors. 
+[Genome-wide association studies (GWAS)](https://doi.org/10.1371/journal.pone.0245376), 
+for example, try to identify genetic
 variants associated with a disease phenotype using hundreds of thousands or millions of
-genomic features. In such settings, traditional least squares methods fail. Penalized Least Squares (PLS) extends ordinary least squares (OLS)
+genomic features. In such settings, traditional least squares methods fail. 
+Penalized Least Squares (PLS) extends ordinary least squares (OLS)
 regression by adding a penalty term to shrink parameter estimates. Ridge regression, an
 approach within PLS, adds a regularization term, producing a regularized estimator. 
 
-Mathematically, ridge regression estimates the regression coefficients by solving the penalized least squares problem
+Mathematically, ridge regression estimates the regression coefficients by solving the 
+penalized least squares problem
 ```math
 \hat{\boldsymbol{\beta}} =
 \arg\min_{\boldsymbol{\beta}}
@@ -41,110 +45,69 @@ The primary goal of this experiment is to compare numerical algorithms for compu
 regression estimates under various conditions. In particular, we aim to address the
 following questions:
 
-1. How does the performance of ridge regression algorithms change as the structural and numerical properties of the regression problem vary?
+1. How does the performance of ridge regression algorithms change as the structural 
+    and numerical properties of the regression problem vary?
 
-2. Which ridge regression algorithm provides the best balance between numerical stability and computational cost across these problem regimes?
+2. Which ridge regression algorithm provides the best balance between numerical 
+    stability and computational cost across these problem regimes?
 
 # Experimental Units
-A block is defined as a collection of experimental units that share common characteristics
-which may influence the response. Blocking is introduced to control for
-variation and to enable meaningful comparisons of algorithm performance across
-different problem regimes.
+An experimental unit is defined by a triplet: a design matrix, $X$; a response vector, $y$;
+and a non-negative regularization parameter $\lambda$. 
+Experimental units are selected based on factors we believe will potentially impact 
+the performance of a specific algorithm.
+These factors, or blocks, correspond to:
+- The dimensional regime of $X \in \mathbb{R}^{n \times p}$: 
+    $p \ll n$, $p ≈ n$, and $p \gg n$.
+- The sparsity of the design matrix: measured as a fraction in $[0,1]$.
+- The magnitude of the regularization parameter, $\lambda$, as described below. 
 
-In this experiment, blocks are defined by combinations of three factors: dimensional
-regime, matrix sparsity, and ridge penalty magnitude. 
+The regularization parameter is often selected using one of the following strategies,
+depending on application domain:
 
-The experimental units are the datasets. Each dataset consists of a design matrix $X$ and
-response vector $y$, with the regularization parameter $\lambda$ determined by the
-blocking structure through the choice of $\epsilon$.
+- [Generalized Cross Validation](https://doi.org/10.1080/00401706.1979.10489751)
+- [The L-Curve Method](https://doi.org/10.1137/1034115)
+- [Information Criteria](https://doi.org/10.1002/wics.1607)
+- [Morozov's Discrepancy Principle](https://doi.org/10.1088/0266-5611/26/2/025001)
 
-Datasets will be grouped according to their dimensional regime, characterized as $p \ll n$,
-$p ≈ n$, and $p \gg n$. These regimes correspond to fundamentally different geometric
-properties of the design matrix, including rank behavior, conditioning, and the stability of
-the normal equations. All of which impact the performance of numerical algorithms.
+Excluding Morozov's discrepancy principle, the remaining methods require
+computing $\hat{\beta}_\lambda = (X^\top X + \lambda I)^{-1}X^\top y$ or 
+$\Vert X\hat{\beta}_\lambda - y \Vert_2$ over a grid of values for $\lambda$.
+Given our assumption that problem conditioning will impact algorithm behavior,
+we will choose this grid to modify the problem's condition number systematically. 
 
-In addition to dimensional block, the strength of the ridge penalty will be incorporated as
-a secondary blocking factor. The ridge estimator is $\hat{\beta_R} = (X^\top X + \lambda
-I)^{-1}X^\top y$. The matrix conditioning number is defined as $\kappa(A) =
-\frac{\sigma_{\max}(A)}{\sigma_{\min}(A)}$. In the context of ridge regression, the
-regularization parameter ${\lambda}$, can impact the conditioning number. Let $X = U\Sigma
-V^\top$ be the SVD of $X$, with singular values $\sigma_1,\dots,\sigma_p$.
-
-Then
-```math
-X^\top X = V \Sigma^\top \Sigma V^\top
-= V \,\mathrm{diag}(\sigma_1^2,\dots,\sigma_p^2)\, V^\top .
+Recall, the ridge estimator's closed form is given by solving
+```math 
+\min_{\beta} \left\Vert \begin{bmatrix} X \\ \lambda I \end{bmatrix}\beta - 
+y \right\Vert_2^2,
 ```
-
-Adding the ridge term gives
-
-```math
-X^\top X + \lambda I
-=
-V \,\mathrm{diag}(\sigma_1^2+\lambda,\dots,\sigma_p^2+\lambda)\, V^\top .
-```
-
+or (equivalently, from a mathematical perspective) solving
+$(X^\top X + \lambda I)\hat{\beta}_\lambda = X^\top y$. 
+Let $\sigma_{\max}$ denote the largest singular value 
+of $X$, and let $\sigma_{\min}$ denote the smallest singular value of 
+$X$ (note, $0$ is allowed). 
+Then the condition number for the normal systems approach is 
 ```math
 \kappa(X^\top X+\lambda I)
 =
 \frac{\sigma_{\max}^2+\lambda}{\sigma_{\min}^2+\lambda}.
 ```
 
-Because the performance of numerical algorithms is strongly influenced by the conditioning
-of the system they solve, the ridge penalty effectively creates regression problems with
-different numerical difficulty. This provides a way to assess how algorithm performance,
-convergence behavior, and computational cost depend on the numerical stability of the
-problem. 
-Recall that,
-```math
-\kappa(X^\top X + \lambda I)
-=
-\frac{\sigma_{\max}^2 + \lambda}{\sigma_{\min}^2 + \lambda},
-```
-Where $\sigma_{\min}$ and $\sigma_{\max}$ denote the smallest and largest
-singular values of $X$. Given a target condition number of the form, $1+\epsilon$ with $\epsilon > 0$, we solve for $\lambda$ by setting
-```math
-\frac{\sigma_{\max}^2 + \lambda}{\sigma_{\min}^2 + \lambda} = 1+\epsilon,
-```
-Which implies
-```math
-\sigma_{\max}^2 + \lambda
-=
-(1+\epsilon)(\sigma_{\min}^2 + \lambda).
-```
-Rearranging gives
-```math
-\sigma_{\max}^2 - (1+\epsilon)\,\sigma_{\min}^2 = (\epsilon)\lambda,
-```
-and therefore
-```math
-\lambda = \frac{\sigma_{\max}^2 - (1+\epsilon)\,\sigma_{\min}^2}{\epsilon}.
-```
-In this experiment, the ridge penalty parameter is not chosen directly, but is instead
-determined through a target level of conditioning. Because the ideal condition number
-of 1 cannot be achieved in practice, we instead aim for values of the form $1 + \epsilon$,
-where $\epsilon > 0$.
+There are two cases we consider.
+- Case 1: $\sigma_{\min}=0$. In this case, the least squares problem is ill-posed. We choose 
+    the smallest value of $\lambda$ in the grid to be
+    $\sigma_{\max}^2 / (10^{12} - 1)$, which ensures 
+    $\kappa(X^\top X + \lambda I) = 10^{12}$.
+- Case 2: $\sigma_{\min}>0$. In this case, we choose the smallest value of $\lambda$ in the 
+    grid to be $\sigma_{\max}\sigma_{\min}$, which ensures 
+    $\kappa(X^\top X + \lambda I) = \sigma_{\max}/\sigma_{\min}$.
+    That is, it sets the regularized normal system's condition number to that of the original 
+    least squares problem.
 
-A strong regularization regime corresponds to small values of $\epsilon$, resulting
-in a well-conditioned system with condition number close to 1. Moderate
-regularization corresponds to intermediate values of $\epsilon$, where the condition
-number is reduced but not minimal. Weak regularization corresponds to large values
-of $\epsilon$, where the system remains relatively ill-conditioned and close to the
-unregularized case.
+In both cases, assuming $\sigma_{\max}^2 > 2 \sigma_{\min}$, we choose the larges value of 
+$\lambda$ to be $\sigma_{\max}^2 - 2 \sigma_{\min}$. The condition number for the 
+regularized normal equations is $\kappa(X^\top X + \lambda I)=2$.
 
-If $X$ is rank deficient, then $\sigma _{min}=0$, then 
-```math
-\lambda =\frac{\sigma _{max}^2}{\epsilon}
-```
-So our method is robust in the case where $X$ is rank deficient.
-
-Another blocking factor that will be considered is how sparse or dense the matrix $X$ is.
-Many algorithms behave differently depending on whether the matrix is sparse or dense. In
-ridge regression, there are many operations involving $X$ including matrix-matrix products
-and matrix-vector products. A dense matrix leads to high computational cost whereas a sparse
-matrix we can significantly reduce the cost. As such, different algorithms may perform
-better depending on the sparsity structure of X, making matrix sparsity a relevant blocking
-factor when comparing algorithm behavior and computational efficiency.
 
 The total number of block combinations is determined by the product of the number of levels
 in each blocking factor, denoted b. For example, if the experiment includes three
@@ -159,6 +122,7 @@ of experimental units is then ${b * r}$.
 | Dataset | Dimensional regime | $(p \ll n)$, $(p \approx n)$, $(p \gg n)$|
 | Ridge Penalty | Magnitude of ${\lambda}$ relative to the spectral scale of $X^\top X$ | Strong: $\kappa \approx 10$, Moderate: $\kappa \approx 10^3$, Weak: $\kappa \approx 10^6$, with $\lambda$ computed from the corresponding $\epsilon$. |
 | Matrix Sparsity| Density of non-zero values in $X$ | Sparse (< 10% non-zero), Moderate (10%-50% non-zero), Dense (> 50% non-zero)|
+
 # Treatments
 
 The treatments are the ridge regression solution methods:
