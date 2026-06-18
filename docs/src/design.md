@@ -54,12 +54,14 @@ following questions:
 # Experimental Units
 An experimental unit is defined by a triplet: a design matrix, $X$; a response vector, $y$;
 and a non-negative regularization parameter $\lambda$. 
+
+Datasets will be generated either fully artificially or semi-artificially. In the artifical setting, both the design matrix (X) and the response vector (y) are generated. In the semi-artifical setting, the design matrix is fixed from a real dataset (e.g. GWAS) and the response vector is generated conditional on X. This is done so that we can compute solution error.
+
 Experimental units are selected based on factors we believe will potentially impact 
 the performance of a specific algorithm.
 These factors, or blocks, correspond to:
 - The dimensional regime of $X \in \mathbb{R}^{n \times p}$: 
     $p \ll n$, $p ≈ n$, and $p \gg n$.
-- The sparsity of the design matrix: measured as a fraction in $[0,1]$.
 - The magnitude of the regularization parameter, $\lambda$, as described below. 
 
 The regularization parameter is often selected using one of the following strategies,
@@ -116,12 +118,12 @@ $3 * 2 * 2 = 12$ block combinations. We will also denote r to be the number of r
 datasets in each block. Here, we mean the number datasets within a block. The total number
 of experimental units is then ${b * r}$.
 
+Matrix sparsity is a factor that can influence algorithm performance. However, we will not consider it in this experiment because none of the algorithms under consideration are implemented in a manner that exploits sparse matrix structure.
 
 | Blocking System | Factor | Blocks |
 |:----------------|:-------|:-------|
 | Dataset | Dimensional regime | $(p \ll n)$, $(p \approx n)$, $(p \gg n)$|
 | Ridge Penalty | Magnitude of ${\lambda}$ relative to the spectral scale of $X^\top X$ | Strong: $\kappa \approx 10$, Moderate: $\kappa \approx 10^3$, Weak: $\kappa \approx 10^6$, with $\lambda$ computed from the corresponding $\epsilon$. |
-| Matrix Sparsity| Density of non-zero values in $X$ | Sparse (< 10% non-zero), Moderate (10%-50% non-zero), Dense (> 50% non-zero)|
 
 # Treatments
 
