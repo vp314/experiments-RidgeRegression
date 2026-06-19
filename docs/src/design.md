@@ -64,6 +64,8 @@ These factors, or blocks, correspond to:
     $p \ll n$, $p ≈ n$, and $p \gg n$.
 - The magnitude of the regularization parameter, $\lambda$, as described below. 
 
+Matrix sparsity is a factor that can influence algorithm performance. However, we will not consider it in this experiment because none of the algorithms under consideration are implemented in a manner that exploits sparse matrix structure.
+
 The regularization parameter is often selected using one of the following strategies,
 depending on application domain:
 
@@ -110,20 +112,36 @@ In both cases, assuming $\sigma_{\max}^2 > 2 \sigma_{\min}$, we choose the large
 $\lambda$ to be $\sigma_{\max}^2 - 2 \sigma_{\min}$. The condition number for the 
 regularized normal equations is $\kappa(X^\top X + \lambda I)=2$.
 
+For each experimental unit, a grid of 15 regularization parameters will be constructed between $\lambda _{min}$ and $\lambda _{max}$. The endpoints of the grid are chosen to correspond to the range of condition numbers of the normal equations. Intermediate values will be selected using a log-scale. We will use logarithmic scaling because $\kappa(X^\top X+\lambda I)$ changes rapidly as $\lambda \rightarrow 0$, making linear spacing insufficient for capturing performance.
+
+Suppose we have m values, $\lambda _1\:,...,\:\lambda _m$ where $\lambda _1=\lambda_{min}$ and $\lambda _m=\lambda _{max}$. Logarithmic scaling tells us we want the ratio between these values to be constant. To ensure this, we consider a geometric series of the form: 
+```math
+\lambda _i=\lambda _{min}\left(r\right)^{i-1}, i = 1, 2, ..., 15
+```
+Our goal here is to derive the common ratio r. Relating $\lambda _{min}$ and $\lambda _{max}$ gives us
+```math
+\lambda _{max}=\lambda _{min}\left(r\right)^{m-1}
+```
+Using algebra to isolate r
+```math
+\frac{\lambda_{\text{max}}}{\lambda_{\text{min}}} = r^{m-1}
+```
+Applying logarithms and rearranging we obtain
+```math
+r=e^{\frac{log\left(\frac{\lambda _{max}}{\lambda _{min}}\right)}{m-1}}=\left(\frac{\lambda _{max}}{\lambda _{min}}\right)^{\frac{1}{m-1}}
+```
+In our case $m=15$ 
 
 The total number of block combinations is determined by the product of the number of levels
-in each blocking factor, denoted b. For example, if the experiment includes three
-dimensional regimes, two sparsity levels, and two regularization strengths, then there are
-$3 * 2 * 2 = 12$ block combinations. We will also denote r to be the number of replicated
+in each factor, denoted b.  We will also denote r to be the number of replicated
 datasets in each block. Here, we mean the number datasets within a block. The total number
 of experimental units is then ${b * r}$.
 
-Matrix sparsity is a factor that can influence algorithm performance. However, we will not consider it in this experiment because none of the algorithms under consideration are implemented in a manner that exploits sparse matrix structure.
 
 | Blocking System | Factor | Blocks |
 |:----------------|:-------|:-------|
 | Dataset | Dimensional regime | $(p \ll n)$, $(p \approx n)$, $(p \gg n)$|
-| Ridge Penalty | Magnitude of ${\lambda}$ relative to the spectral scale of $X^\top X$ | Strong: $\kappa \approx 10$, Moderate: $\kappa \approx 10^3$, Weak: $\kappa \approx 10^6$, with $\lambda$ computed from the corresponding $\epsilon$. |
+| Conditioning | Condition number of $X^\top X + \lambda I$ | 15 logartihmically spaced $\lambda$ values so that $\kappa(X^\top X+\lambda I)$ ranges from poorly conditioned to conditioned. |
 
 # Treatments
 
@@ -146,8 +164,8 @@ The observational units are each algorithm-dataset pair. For each combination we
 |:---|:---|:---|
 | `dataset_id` | Positive Integer | Identifier for the generated dataset (experimental unit). |
 | `dimensional_regime` | String | Relationship between predictors and observations: `p << n`, `p ≈ n`, or `p >> n`. |
-| `sparsity_level` | String | Density of the matrix `X`: `Sparse`, `Moderate`, or `Dense`. |
-| `lambda_level` | String | Relative magnitude of the ridge penalty parameter `λ`: `Weak`, `Moderate`, or  `Strong`. |
+| `lambda` | Positive Floating-point| Regularization parameter used. |
+| `condition_number` | Positive Floating-point| $\kappa(X^\top X+\lambda I)$ corresponding to the selected $\lambda$ |
 | `algorithm` | String | Ridge regression solution method used: `GradientDescent`, `SGD`, or `DirectMethod`. |
 | `runtime_seconds` | Positive Floating-point | Time required for the algorithm to compute a solution. |
 | `iterations` | Positive Integer | Number of iterations performed by the algorithm (`NA` for direct methods). |
