@@ -61,7 +61,7 @@ One-hot encode categorical (string-like) features in `Xdf`.
   each categorical feature to avoid multicollinearity.
 
 # Returns
-- `Matrix{Float64}`: A numeric matrix containing the encoded feature.
+- `::Matrix{Float64}`: A numeric matrix containing the encoded feature.
 """
 function one_hot_encode(Xdf::DataFrame; cols_to_encode, drop_first::Bool = true)::Matrix{Float64}
     n = nrow(Xdf)
