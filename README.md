@@ -8,7 +8,7 @@
 
 # Project Overview
 
-This project investigates the performance of numerical algorithms for solving the ridge regression problem under varying dimension regimes and conditioning levels. The algorithms under consideration are direct methods, gradient-based methods, and stochastic gradient descent.
+This project investigates the performance of numerical algorithms for solving the ridge regression problem under varying dimension regimes and conditioning levels.
 
 # Directory Structure
 
