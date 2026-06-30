@@ -12,7 +12,7 @@ This project investigates the performance of numerical algorithms for solving th
 
 # Directory Structure
 
-The source-code layout will be structured as such:
+The source-code layout will be structured as follows:
 ```text
 .
 ├── Project.toml
@@ -20,6 +20,8 @@ The source-code layout will be structured as such:
 ├── src
 │   ├── RidgeRegression.jl
 │   ├── units.jl
+    ├── treatments.jl
+    ├── measurements.jl
 │   └── algorithms
 │       ├── closed_form.jl
 │       ├── gradient_descent.jl
@@ -29,22 +31,38 @@ The source-code layout will be structured as such:
 ├── test
 │   ├── Project.toml
 │   ├── runtests.jl
-│   ├── dataset_tests.jl
-│   ├── encoding_tests.jl
-│   ├── load_csv_dataset_tests.jl
-│   ├── closed_form_tests.jl
-│   ├── gradient_descent_tests.jl
-│   ├── stochastic_gradient_descent_tests.jl
-│   ├── compute_givens_test.jl
-│   ├── rotate_rows_test.jl
-│   ├── rotate_cols_test.jl
-│   ├── apply_Ht_to_b_test.jl
-│   └── bidiagonalize_with_H_test.jl
+│   └── src
+│       ├── RidgeRegression_test.jl
+│       ├── units
+│       │   ├── units_dataset_tests.jl
+│       │   ├── units_one_hot_encode_tests.jl
+            ├── units_end_to_end_tests.jl
+│       │   └── units_load_csv_dataset_tests.jl
+│       ├── treatments
+│       │   └── treatments_test.jl
+│       ├── measurements
+│       │   └── measurements_test.jl
+│       └── algorithms
+│           ├── closed_form_test.jl
+│           ├── gradient_descent_test.jl
+│           ├── stochastic_gradient_descent_test.jl
+│           └── bidiagonalization
+│               ├── bidiagonalization_compute_givens_tests.jl
+│               ├── bidiagonalization_rotate_rows_tests.jl
+│               ├── bidiagonalization_rotate_cols_tests.jl
+│               ├── bidiagonalization_apply_Ht_to_b_tests.jl
+│               └── bidiagonalization_with_H_tests.jl
 │
 └── docs
     ├── make.jl
     └── src
         ├── design.md
+        ├── getting_started_guide.md
+        ├── experimental_pipeline.md
+        ├── algorithm_explanations.md
+        ├── dataset.md
+        ├── measurements.md
+        ├── output.md
         └── index.md
 ```
 # PR Schedule and Roadmap
@@ -86,10 +104,10 @@ This PR ensures that we have generated experimental units consistent with our de
 | `src/units.jl` | `Dataset(name::String, X::AbstractMatrix, y::AbstractVector)` | Constructs a `Dataset` object and validates that the number of rows in `X` matches the length of `y`. |
 | `src/units.jl` | `one_hot_encode(Xdf::DataFrame; cols_to_encode, drop_first=true)` | Converts selected categorical columns in a feature `DataFrame` into numeric dummy variables while leaving numeric columns unchanged. |
 | `src/units.jl` | `load_csv_dataset(path_or_url::String; target_col, cols_to_encode=Symbol[], name="csv_dataset")` | Loads a dataset from a local CSV file or URL, removes missing observations, separates features from the target column, applies one-hot encoding, and returns a `Dataset` object. |
-| `test/dataset_tests.jl` | `Dataset` constructor tests | Verify that valid matrices and response vectors produce a `Dataset`, and that mismatched dimensions throw an `ArgumentError`. |
-| `test/encoding_tests.jl` | Encoding tests | Verify that categorical variables are correctly one-hot encoded, that numeric columns are preserved, and that invalid nonnumeric columns trigger appropriate errors. |
-| `test/load_csv_dataset_tests.jl` | CSV-loading tests | Verify that CSV data can be loaded, cleaned, encoded, and converted into a valid `Dataset` object. |
-| `test/end_to_end_tests.jl` | End-to-end dataset pipeline tests | Verify that raw tabular data can move through the full pipeline: CSV loading, preprocessing, encoding, dataset construction, and compatibility with downstream ridge regression routines. |
+| `test/src/units/units_dataset_tests.jl` | `Dataset` constructor tests | Verify that valid matrices and response vectors produce a `Dataset`, and that mismatched dimensions throw an `ArgumentError`. |
+| `test/src/units/units_one_hot_encode_test.jl` | Encoding tests | Verify that categorical variables are correctly one-hot encoded, that numeric columns are preserved, and that invalid nonnumeric columns trigger appropriate errors. |
+| `test/src/units/units_load_csv_dataset_tests.jl` | CSV-loading tests | Verify that CSV data can be loaded, cleaned, encoded, and converted into a valid `Dataset` object. |
+| `test/src/units/units_end_to_end_tests.jl` | End-to-end dataset pipeline tests | Verify that raw tabular data can move through the full pipeline: CSV loading, preprocessing, encoding, dataset construction, and compatibility with downstream ridge regression routines. |
 
 ## PR 3: Golub Kahan Bidiagonalization and Corresponding Tests
 **Expected Date:** June 30, 2026
@@ -108,16 +126,16 @@ This PR is the first algorithm (treatment) in the project and establishes a dire
 ### [FILES and Functions]
 | File | Structure / Function | Purpose |
 |------|----------------------|---------|
-| `src/bidiagonalization.jl` | `compute_givens(...)` | Computes the cosine and sine coefficients defining a Givens rotation used to eliminate selected matrix entries. |
-| `src/bidiagonalization.jl` | `rotate_rows!(...)` | Applies a Givens rotation to two rows of a matrix during the left-transformation stage of the bidiagonalization procedure. |
-| `src/bidiagonalization.jl` | `rotate_cols!(...)` | Applies a Givens rotation to two columns of a matrix during the right-transformation stage of the bidiagonalization procedure. |
-| `src/bidiagonalization.jl` | `apply_Ht_to_b(...)` | Applies the accumulated left orthogonal transformations to the constant vector, producing the transformed right-hand side of the reduced problem. |
-| `src/bidiagonalization.jl` | `bidiagonalize_with_H(...)` | Performs Golub–Kahan Bidiagonalization using Givens rotations and accumulates the orthogonal transformations required to reduce a matrix to upper bidiagonal form. |
-| `test/compute_givens_test.jl` | Givens rotation tests | Verify that the computed rotation coefficients satisfy the expected numerical and trigonometric properties. |
-| `test/rotate_rows_test.jl` | Row rotation tests | Verify that row rotations correctly eliminate targeted entries while preserving orthogonality. |
-| `test/rotate_cols_test.jl` | Column rotation tests | Verify that column rotations correctly eliminate targeted entries while preserving orthogonality. |
-| `test/apply_Ht_to_b_test.jl` | Transformation tests | Verify that accumulated orthogonal transformations are correctly applied to the constant vector. |
-| `test/bidiagonalize_with_H_test.jl` | Bidiagonalization tests | Verify that the resulting matrix is upper bidiagonal and that the accumulated orthogonal matrices satisfy the expected structural properties. |
+| `src/algorithms/bidiagonalization.jl` | `compute_givens(...)` | Computes the cosine and sine coefficients defining a Givens rotation used to eliminate selected matrix entries. |
+| `src/algorithms/bidiagonalization.jl` | `rotate_rows!(...)` | Applies a Givens rotation to two rows of a matrix during the left-transformation stage of the bidiagonalization procedure. |
+| `src/algorithms/bidiagonalization.jl` | `rotate_cols!(...)` | Applies a Givens rotation to two columns of a matrix during the right-transformation stage of the bidiagonalization procedure. |
+| `src/algorithms/bidiagonalization.jl` | `apply_Ht_to_b(...)` | Applies the accumulated left orthogonal transformations to the constant vector, producing the transformed right-hand side of the reduced problem. |
+| `src/algorithms/bidiagonalization.jl` | `bidiagonalize_with_H(...)` | Performs Golub–Kahan Bidiagonalization using Givens rotations and accumulates the orthogonal transformations required to reduce a matrix to upper bidiagonal form. |
+| `test/src/algorithms/bidiagonalization/bidiagonalization_compute_givens_test.jl` | Givens rotation tests | Verify that the computed rotation coefficients satisfy the expected numerical and trigonometric properties. |
+| `test/src/algorithms/bidiagonalization/bidiagonalization_rotate_rows_test.jl` | Row rotation tests | Verify that row rotations correctly eliminate targeted entries while preserving orthogonality. |
+| `test/src/algorithms/bidiagonalization/bidiagonalization_rotate_cols_test.jl` | Column rotation tests | Verify that column rotations correctly eliminate targeted entries while preserving orthogonality. |
+| `test/src/algorithms/bidiagonalization/bidiagonalization_apply_Ht_to_b_test.jl` | Transformation tests | Verify that accumulated orthogonal transformations are correctly applied to the constant vector. |
+| `test/src/algorithms/bidiagonalization/bidiagonalization_with_H_test.jl` | Bidiagonalization tests | Verify that the resulting matrix is upper bidiagonal and that the accumulated orthogonal matrices satisfy the expected structural properties. |
 
 
 ## PR 4: Gradient Based Optimization and Corresponding Tests
@@ -143,10 +161,10 @@ The exact function names may evolve, but this PR is expected to include the foll
 | `src/algorithms/gradient_descent.jl` | `gradient_descent(...)` | Implement the main iterative update procedure for solving ridge regression problems. |
 | `src/algorithms/gradient_descent.jl` | `stopping_criterion(...)` | Determine when the iterative method should terminate based on tolerance, maximum iterations, or convergence behavior. |
 | `src/algorithms/gradient_descent.jl` | `gradient_descent_results(...)` | Store or return solution information such as coefficients, objective values, iteration count, and convergence status. |
-| `test/gradient_descent_tests.jl` | Objective and gradient tests | Verify that objective values and gradients are computed correctly. |
-| `test/gradient_descent_tests.jl` | Update rule tests | Verify that gradient descent updates move in the expected direction and reduce the objective under appropriate conditions. |
-| `test/gradient_descent_tests.jl` | Convergence tests | Verify that the method approaches known ridge regression solutions on small benchmark problems. |
-| `test/gradient_descent_tests.jl` | End-to-end pipeline tests | Verify compatibility with experimental units, benchmarking routines, and downstream measurement collection. |
+| `test/src/algorithms/gradient_descent_test/gradient_descent_objective_gradient_test.jl` | Objective and gradient tests | Verify that objective values and gradients are computed correctly. |
+| `test/src/algorithms/gradient_descent_test/gradient_descent_update_rule_test.jl` | Update rule tests | Verify that gradient descent updates move in the expected direction and reduce the objective under appropriate conditions. |
+| `test/src/algorithms/gradient_descent_test/gradient_descent_convergence_test.jl` | Convergence tests | Verify that the method approaches known ridge regression solutions on small benchmark problems. |
+| `test/src/algorithms/gradient_descent_test/gradient_descent_pipeline_test.jl` | End-to-end pipeline tests | Verify compatibility with experimental units, benchmarking routines, and downstream measurement collection. |
 
 ## PR 5: Stochastic Optimization and Corresponding Tests
 **Expected Date:** July 30, 2026
@@ -162,3 +180,5 @@ This PR ensures correctness and reliability through a combination of unit testin
 
 ### [SO WHAT]
 This PR extends the project's ability to solve ridge regression problems beyond the regimes where direct and traditional iterative methods are practical. By introducing stochastic optimization methods, we can apply treatments to larger experimental units and collect the measurements and observations necessary to compare algorithm performance across a broader range of problem dimensions and computational settings.
+
+### [TO DO]
