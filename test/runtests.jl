@@ -6,15 +6,15 @@ using CSV
 
 @testset "RidgeRegression.jl" begin
     @testset "Dataset Tests" begin
-        include("dataset_tests.jl")
+        include("src/units/units_dataset_tests.jl")
     end
 
     @testset "One-Hot Encoding Tests" begin
-        include("encoding_tests.jl")
+        include("src/units/units_encoding_tests.jl")
     end
 
     @testset "Load CSV Dataset Tests" begin
-        include("load_csv_dataset_tests.jl")
+        include("src/units/units_load_csv_dataset_tests.jl")
     end
 
 end
