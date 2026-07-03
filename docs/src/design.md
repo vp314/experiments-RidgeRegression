@@ -32,7 +32,7 @@ Blocks are defined by combinations of the experimental blocking factors, includi
 
 Datasets will be grouped according to their dimensional regime, characterized as $p \ll n$, p ≈ n, and $p \gg n$. These regimes correspond to fundamentally different geometric properties of the design matrix, including rank behavior, conditioning, and the stability of the normal equations.
 
-In addition to dimensional block, the strength of the ridge penalty will be incorporated as a secondary blocking factor. The ridge estimator is $\hat{\beta_R} = (X^\top X + \lambda I)^{-1}X^\top y$. The matrix conditioning number is defined as $\kappa(A) = \frac{\sigma_{\max}(A)}{\sigma_{\min}(A)}$. In the context of ridge regression, the regularization parameter ${\lambda}$, can impact the conditioning number. Let $X = U\Sigma V^\top$ be the SVD of $X$, with singular values $\sigma_1,\dots,\sigma_p$.
+Datasets will be generated either fully artificially or semi-artificially. In the artifical setting, both the design matrix (X) and the response vector (y) are generated. In the semi-artifical setting, the design matrix is fixed from a real dataset (e.g. GWAS) and the response vector is generated conditional on X. This is done so that we can compute solution error.
 
 Then
 ```math
@@ -40,7 +40,8 @@ X^\top X = V \Sigma^\top \Sigma V^\top
 = V \,\mathrm{diag}(\sigma_1^2,\dots,\sigma_p^2)\, V^\top .
 ```
 
-Adding the ridge term gives
+The regularization parameter is often selected using one of the following strategies,
+depending on application domain:
 
 ```math
 X^\top X + \lambda I
