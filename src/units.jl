@@ -66,6 +66,7 @@ One-hot encode categorical (string-like) features in `Xdf`.
 function one_hot_encode(Xdf::DataFrame; cols_to_encode, drop_first::Bool = true)::Matrix{Float64}
     n = nrow(Xdf)
     cols = Vector{Vector{Float64}}()
+    push!(cols, ones(Float64, n)) #Add a column of ones for the intercept term in the design matrix.
     encode_names = Set(c isa Int ? Symbol(names(Xdf)[c]) : Symbol(c) for c in cols_to_encode)
 
 
