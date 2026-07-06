@@ -2,7 +2,7 @@
     X = [1 2; 3 4]
     y = [10, 20]
     λ = 0.1
-    d = Unit("toy", X, y, λ)
+    d = RidgeRegression.Unit("toy", X, y, λ)
 
     @test "toy" == d.name
     @test X == d.X
@@ -19,5 +19,5 @@ end
 @testset "Unit constructor throws error for mismatched dimensions" begin
     X = [1 2; 3 4]
     λ = 0.1
-    @test_throws ArgumentError Unit("bad", X, [1, 2, 3], λ)
+    @test_throws ArgumentError RidgeRegression.Unit("bad", X, [1, 2, 3], λ)
 end
