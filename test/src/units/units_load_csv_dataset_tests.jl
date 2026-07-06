@@ -15,11 +15,12 @@
     @test "tmp" == d.name
     @test λ == d.λ
     @test 3 == d.n
-    @test 2 == d.p
+    @test 3 == d.p
     @test 3 == length(d.y)
     @test 3 == size(d.X, 1)
+    @test all(d.X[:, 1] .== 1.0)
     @test [10.0, 20.0, 40.0] == d.y
-    @test (3, 2) == size(d.X)
+    @test (3, 3) == size(d.X)
 end
 
 @testset "load_csv_dataset drops missing rows and uses target column by index" begin
@@ -39,8 +40,9 @@ end
     @test "tmp2" == d.name
     @test λ == d.λ
     @test 3 == d.n
-    @test 2 == d.p
+    @test 3 == d.p
+    @test all(d.X[:, 1] .== 1.0)
     @test [10.0, 20.0, 40.0] == d.y
     @test 3 == size(d.X, 1)
-    @test (3, 2) == size(d.X)
+    @test (3, 3) == size(d.X)
 end

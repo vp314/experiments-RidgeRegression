@@ -7,11 +7,12 @@
 
     X = one_hot_encode(df; cols_to_encode=[:A, :C], drop_first=true)
 
-    @test (4, 5) == size(X)
-    @test [1.0, 2.0, 3.0, 4.0] == X[:, 3]
-    @test all(x -> x == 0.0 || x == 1.0, X[:, [1, 2, 4, 5]])
-    @test all(vec(sum(X[:, 1:2]; dims=2)) .<= 1)
-    @test all(vec(sum(X[:, 4:5]; dims=2)) .<= 1)
+    @test (4, 6) == size(X)
+    @test all(X[:, 1] .== 1.0)
+    @test [1.0, 2.0, 3.0, 4.0] == X[:, 4]
+    @test all(x -> x == 0.0 || x == 1.0, X[:, [2, 3, 5, 6]])
+    @test all(vec(sum(X[:, 2:3]; dims=2)) .<= 1)
+    @test all(vec(sum(X[:, 5:6]; dims=2)) .<= 1)
 end
 
 @testset "one_hot_encode throws error for invalid column specifications" begin
@@ -32,7 +33,8 @@ end
 
     X = one_hot_encode(df; cols_to_encode=[:group], drop_first=true)
 
-    @test (4, 3) == size(X)
-    @test [10.0, 20.0, 30.0, 40.0] == X[:, 3]
-    @test all(x -> x == 0.0 || x == 1.0, X[:, 1:2])
+    @test (4, 4) == size(X)
+    @test all(X[:, 1] .== 1.0)
+    @test [10.0, 20.0, 30.0, 40.0] == X[:, 4]
+    @test all(x -> x == 0.0 || x == 1.0, X[:, 2:3])
 end
