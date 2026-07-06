@@ -9,9 +9,13 @@
 
     CSV.write(tmp, df)
 
-    d = load_csv_dataset(tmp; target_col=:y, cols_to_encode=[:b], name="tmp")
+    λ = 0.1
+    d = load_csv_dataset(tmp; target_col=:y, cols_to_encode=[:b], name="tmp", λ=λ)
 
     @test "tmp" == d.name
+    @test λ == d.λ
+    @test 3 == d.n
+    @test 2 == d.p
     @test 3 == length(d.y)
     @test 3 == size(d.X, 1)
     @test [10.0, 20.0, 40.0] == d.y
@@ -29,9 +33,13 @@ end
 
     CSV.write(tmp, df)
 
-    d = load_csv_dataset(tmp; target_col=3, cols_to_encode=[:b], name="tmp2")
+    λ = 0.5
+    d = load_csv_dataset(tmp; target_col=3, cols_to_encode=[:b], name="tmp2", λ=λ)
 
     @test "tmp2" == d.name
+    @test λ == d.λ
+    @test 3 == d.n
+    @test 2 == d.p
     @test [10.0, 20.0, 40.0] == d.y
     @test 3 == size(d.X, 1)
     @test (3, 2) == size(d.X)

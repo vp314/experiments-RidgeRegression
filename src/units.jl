@@ -127,11 +127,13 @@ Load a dataset from a CSV file or URL and removes rows with missing values.
 - `cols_to_encode=Symbol[]`: Column names or indices in the feature data to one-hot encode.
 - `target_col`: Column index or column name containing the response variable.
 - `name::String="csv_dataset"`: Dataset name.
+- `λ::Real=1.0`: Regularization parameter for ridge regression.
 
 # Returns
-- `Dataset`: A dataset containing the encoded feature matrix `X`, response vector `y`, and dataset name.
+- `Unit`: A unit containing the encoded feature matrix `X`, response vector `y`,
+  regularization parameter `λ`, and dimensions `n` and `p`.
 """
-function load_csv_dataset(path_or_url::String;  cols_to_encode=Symbol[], target_col, name::String = "csv_dataset")
+function load_csv_dataset(path_or_url::String;  cols_to_encode=Symbol[], target_col, name::String = "csv_dataset", λ::Real=1.0)
 
     filepath =
         startswith(path_or_url, "http") ?
@@ -152,5 +154,5 @@ function load_csv_dataset(path_or_url::String;  cols_to_encode=Symbol[], target_
     X = one_hot_encode(Xdf; cols_to_encode=encode_cols, drop_first = true)
 
 
-    return Dataset(name, X, collect(Float64, y))
+    return Unit(name, X, collect(Float64, y), λ)
 end
