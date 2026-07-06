@@ -1,49 +1,57 @@
 """
-    Dataset <: ExperimentalUnit
+    Unit{TX<:AbstractMatrix, TY<:AbstractVector, Tλ<:Real}
 
-A dataset for Ridge Regression experiements.
+An experimental unit for ridge regression experiments.
 
 # Description
 
-A `Dataset` object stores the design matrix ``X`` and response vector ``y``
-for a regression problem. These datasets serve as the experimental units for ridge regression experiments, allowing us to evaluate the performance of ridge regression models on various datasets.
+A `Unit` object stores the design matrix `X`, response vector `y`,
+regularization parameter `λ`, and dimensions `n` and `p`
+for a ridge regression problem.
 
 # Fields
-- `name::String`: Name of dataset
+- `name::String`: Name of the unit
 - `X::TX`: Matrix of variables/features
 - `y::TY`: Target vector
+- `λ::Tλ`: Regularization parameter for ridge regression
+- `n::Int`: Number of rows
+- `p::Int`: Number of columns
 
 # Constructor
 
-     Dataset(name::String, X::AbstractMatrix, y::AbstractVector)
+    Unit(name::String, X::AbstractMatrix, y::AbstractVector, λ::Real)
 
 ## Arguments
-- `name::String`: Name of dataset
-- `X::TX`: Matrix of variables/features
-- `y::TY`: Target vector
+- `name::String`: Name of the unit
+- `X::AbstractMatrix`: Matrix of variables/features
+- `y::AbstractVector`: Target vector
+- `λ::Real`: Regularization parameter for ridge regression
 
 ## Returns
-- A `Dataset` object containing the numeric design matrix and response vector.
+- A `Unit` object containing the design matrix, response vector, regularization parameter, and dimensions.
 
 ## Throws
-- `ArgumentError`: If rows in `X` does not equal length of `y`.
-
-!!! note
-    `Dataset` objects are used as experimental units when evaluating
-    ridge regression algorithms. The parametric design allows both dense
-    and sparse matrices to be stored without forcing conversion to a
-    dense `Matrix{Float64}`.
+- `ArgumentError`: If rows in `X` do not equal length of `y`.
 """
-struct Dataset{TX<:AbstractMatrix, TY<:AbstractVector}
+struct Unit{TX<:AbstractMatrix, TY<:AbstractVector, Tλ<:Real}
     name::String
     X::TX
     y::TY
+    λ::Tλ
+    n::Int
+    p::Int
 
-    function Dataset(name::String, X::TX, y::TY) where {TX<:AbstractMatrix, TY<:AbstractVector}
+    function Unit(name::String, X::TX, y::TY, λ::Tλ) where {
+        TX<:AbstractMatrix,
+        TY<:AbstractVector,
+        Tλ<:Real
+    }
         size(X, 1) == length(y) ||
             throw(ArgumentError("X and y must have same number of rows"))
 
-        new{TX, TY}(name, X, y)
+        n, p = size(X)
+
+        new{TX, TY, Tλ}(name, X, y, λ, n, p)
     end
 end
 
