@@ -70,6 +70,9 @@ One-hot encode categorical (string-like) features in `Xdf`.
 
 # Returns
 - `::Matrix{Float64}`: A numeric matrix containing the encoded feature.
+
+# Throws
+- `ArgumentError`: If a column in `Xdf` is not numeric and not listed in `cols_to_encode`.
 """
 function one_hot_encode(Xdf::DataFrame; cols_to_encode, drop_first::Bool = true)::Matrix{Float64}
     n = nrow(Xdf)
@@ -115,7 +118,7 @@ end
 """
     load_csv_dataset(path_or_url; target_col, name="csv_dataset")
 
-Load a dataset from a CSV file or URL.
+Load a dataset from a CSV file or URL and removes rows with missing values.
 
 # Arguments
 - `path_or_url::String`: Local file path or web URL containing CSV data.
