@@ -1,6 +1,8 @@
 module LoadDatasetTests
 
 using Test
+using DataFrames
+using CSV
 using ..RidgeRegression
 
 @testset "load_csv_dataset drops missing rows and uses target column" begin

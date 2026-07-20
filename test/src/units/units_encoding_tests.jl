@@ -1,7 +1,8 @@
 module EncodingTests
 
 using Test
-using RidgeRegression
+using DataFrames
+using ..RidgeRegression
 
 @testset "one_hot_encode encodes specified categorical columns and keeps numeric columns" begin
     df = DataFrame(
