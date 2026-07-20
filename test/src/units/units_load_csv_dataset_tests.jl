@@ -1,7 +1,7 @@
 module LoadDatasetTests
 
 using Test
-using RidgeRegression
+using ..RidgeRegression
 
 @testset "load_csv_dataset drops missing rows and uses target column" begin
     tmp = tempname() * ".csv"
