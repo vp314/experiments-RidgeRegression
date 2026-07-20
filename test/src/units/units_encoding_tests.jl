@@ -1,3 +1,8 @@
+module EncodingTests
+
+using Test
+using RidgeRegression
+
 @testset "one_hot_encode encodes specified categorical columns and keeps numeric columns" begin
     df = DataFrame(
         A = ["red", "blue", "red", "green"],
@@ -37,4 +42,6 @@ end
     @test all(X[:, 1] .== 1.0)
     @test [10.0, 20.0, 30.0, 40.0] == X[:, 4]
     @test all(x -> x == 0.0 || x == 1.0, X[:, 2:3])
+end
+
 end

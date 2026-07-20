@@ -1,3 +1,8 @@
+module UnitDatasetTests
+
+using Test
+using RidgeRegression
+
 @testset "Unit constructor stores fields correctly" begin
     X = [1 2; 3 4]
     y = [10, 20]
@@ -20,4 +25,6 @@ end
     X = [1 2; 3 4]
     λ = 0.1
     @test_throws ArgumentError RidgeRegression.Unit("bad", X, [1, 2, 3], λ)
+end
+
 end

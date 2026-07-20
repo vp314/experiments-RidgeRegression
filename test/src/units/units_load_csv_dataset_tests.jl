@@ -1,3 +1,8 @@
+module LoadDatasetTests
+
+using Test
+using RidgeRegression
+
 @testset "load_csv_dataset drops missing rows and uses target column" begin
     tmp = tempname() * ".csv"
 
@@ -45,4 +50,6 @@ end
     @test [10.0, 20.0, 40.0] == d.y
     @test 3 == size(d.X, 1)
     @test (3, 3) == size(d.X)
+end
+
 end
