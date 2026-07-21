@@ -1,3 +1,8 @@
+module computegivens_test
+
+using Test
+using ..RidgeRegression
+
 @testset "Testset 1" begin
     c, s = compute_givens(3.0, 0.0)
     @test c == 1.0
@@ -10,4 +15,6 @@
     @test isapprox(v2, 0.0; atol=1e-12, rtol=0)
     @test isapprox(abs(v1), hypot(a, b); atol=1e-12, rtol=0)
     @test_throws ArgumentError compute_givens(0.0, 2.0)
+end
+
 end

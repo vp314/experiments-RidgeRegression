@@ -1,3 +1,8 @@
+module BidiagonalizeATests
+
+using Test
+using ..RidgeRegression
+
 @testset "bidiagonalize_A preserves orthogonality and factorization identities" begin
     A = [1.0 2.0 3.0;
          4.0 5.0 6.0;
@@ -82,4 +87,6 @@ end
     @test H' * A * K ≈ B
     @test L * K ≈ C
     @test isapprox(B[2, 1], 0.0; atol=1e-12, rtol=0)
+end
+
 end
