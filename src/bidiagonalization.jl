@@ -76,7 +76,7 @@ function rotate_cols!(M::AbstractMatrix,i::Int,j::Int,c::Number,s::Number)
     return M
 end
 """
-    bidiagonalize_with_H(A::AbstractMatrix, L::AbstractMatrix, b::AbstractVector)
+    bidiagonalize_A(A::AbstractMatrix, L::AbstractMatrix, b::AbstractVector)
 
 Performs bidiagonalization of a matrix A using a sequence of Givens transformations while explicitly accumulating
 the orthogonal left factor `H` and right factor `K` such that
@@ -86,7 +86,6 @@ the orthogonal left factor `H` and right factor `K` such that
 # Arguments
 - `A::AbstractMatrix`: The matrix to be bidiagonalized
 - `L::AbstractMatrix`: The banded matrix to be updated in-place
-- `b::AbstractVector`: The vector to be transformed
 
 # Returns
 - `B::AbstractMatrix`: The bidiagonalized form of the input matrix A with dimension (n,n)
@@ -94,16 +93,14 @@ the orthogonal left factor `H` and right factor `K` such that
 - `H::AbstractMatrix`: The orthogonal left factor
 - `K::AbstractMatrix`: The orthogonal right factor
 - `Ht::AbstractMatrix`: The transpose of the orthogonal left factor
-- `b::AbstractVector`: The vector resulting from applying the Givens transformations to the input vector b
 
 """
 
-function bidiagonalize_with_H(A::AbstractMatrix, L::AbstractMatrix, b::AbstractVector)
+function bidiagonalize_A(A::AbstractMatrix, L::AbstractMatrix)
     m, n = size(A)
 
     B = copy(A) #Will be transformed into bidiagonal form
     C = copy(L)
-    bhat = copy(b) #Will recieve same left transformations applied to A
 
     Ht = Matrix{eltype(A)}(I, m, m) #Ht will accumulate the left transformations, initialized as identity
     K  = Matrix{eltype(A)}(I, n, n) #K will accumulate the right transformations, initialized as identity
@@ -136,9 +133,8 @@ function bidiagonalize_with_H(A::AbstractMatrix, L::AbstractMatrix, b::AbstractV
         end
     end
 
-    H = transpose(Ht)
-    bhat = apply_Ht_to_b(Ht, b)
-    return B, C, H, K, Ht, bhat
+    H = adjoint(Ht)
+    return B, C, H, K, Ht
 end
 
 """
@@ -162,4 +158,36 @@ function apply_Ht_to_b(Ht::AbstractMatrix, b::AbstractVector)
         "Ht has $(size(Ht, 2)) columns but b has length $(length(b))"
     ))
     return Ht * b
+end
+
+"""
+    bidiagonalize_with_H(A, L, b)
+
+Bidiagonalize `A` and apply the accumulated left transformation to `b`.
+
+# Arguments
+- `A::AbstractMatrix`: The matrix to be bidiagonalized.
+- `L::AbstractMatrix`: The matrix updated using the accumulated right transformations.
+- `b::AbstractVector`: The vector to be transformed by the accumulated left transformation.
+
+# Returns
+- `B::AbstractMatrix`: The bidiagonalized form of `A`.
+- `C::AbstractMatrix`: The transformed form of `L`.
+- `H::AbstractMatrix`: The left orthogonal factor.
+- `K::AbstractMatrix`: The right orthogonal factor.
+- `Ht::AbstractMatrix`: The transpose of `H`, representing the accumulated left transformations.
+- `bhat::AbstractVector`: The transformed vector satisfying `bhat = Ht * b`.
+
+# Throws
+- `DimensionMismatch`: If the number of columns of `Ht` does not equal the length of `b`.
+"""
+function bidiagonalize_with_H(
+    A::AbstractMatrix,
+    L::AbstractMatrix,
+    b::AbstractVector,
+)
+    result = bidiagonalize_A(A, L)
+    bhat = apply_Ht_to_b(result.Ht, b)
+
+    return merge(result, (; bhat))
 end
