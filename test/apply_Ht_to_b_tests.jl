@@ -1,3 +1,8 @@
+module ApplyHtToBTests
+
+using Test
+using ..RidgeRegression
+
 @testset "apply_Ht_to_b returns original vector when Ht is identity" begin
     Ht = Matrix{Float64}(I, 3, 3)
     b  = [1.0, 2.0, 3.0]
@@ -31,4 +36,6 @@ end
     b  = [1.0, 2.0]
 
     @test_throws DimensionMismatch apply_Ht_to_b(Ht, b)
+end
+
 end
