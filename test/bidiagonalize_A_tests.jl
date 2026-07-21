@@ -1,6 +1,7 @@
 module BidiagonalizeATests
 
 using Test
+using LinearAlgebra
 using ..RidgeRegression
 
 @testset "bidiagonalize_A preserves orthogonality and factorization identities" begin

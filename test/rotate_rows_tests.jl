@@ -1,6 +1,7 @@
 module RotateRowsTests
 
 using Test
+using LinearAlgebra
 using ..RidgeRegression
 
 @testset "rotate_rows! correctly applies Givens rotation to rows" begin

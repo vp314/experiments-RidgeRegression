@@ -1,6 +1,7 @@
 module computegivens_test
 
 using Test
+using LinearAlgebra
 using ..RidgeRegression
 
 @testset "Testset 1" begin

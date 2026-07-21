@@ -1,6 +1,7 @@
 module RotateColsTests
 
 using Test
+using LinearAlgebra
 using ..RidgeRegression
 
 @testset "rotate_cols! zeros second column entry using Givens rotation" begin

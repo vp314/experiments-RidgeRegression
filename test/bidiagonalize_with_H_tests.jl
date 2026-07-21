@@ -1,6 +1,7 @@
 module ApplyHtToBTests
 
 using Test
+using LinearAlgebra
 using ..RidgeRegression
 
 @testset "bidiagonalize_with_H applies Ht to b" begin

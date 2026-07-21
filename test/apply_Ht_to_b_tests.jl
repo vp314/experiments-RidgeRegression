@@ -1,6 +1,7 @@
 module ApplyHtToBTests
 
 using Test
+using LinearAlgebra
 using ..RidgeRegression
 
 @testset "apply_Ht_to_b returns original vector when Ht is identity" begin

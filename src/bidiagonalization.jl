@@ -181,13 +181,9 @@ Bidiagonalize `A` and apply the accumulated left transformation to `b`.
 # Throws
 - `DimensionMismatch`: If the number of columns of `Ht` does not equal the length of `b`.
 """
-function bidiagonalize_with_H(
-    A::AbstractMatrix,
-    L::AbstractMatrix,
-    b::AbstractVector,
-)
-    result = bidiagonalize_A(A, L)
-    bhat = apply_Ht_to_b(result.Ht, b)
+function bidiagonalize_with_H(A::AbstractMatrix, L::AbstractMatrix, b::AbstractVector,)
+    B, C, H, K, Ht = bidiagonalize_A(A, L)
+    bhat = Ht * b
 
-    return merge(result, (; bhat))
+    return B, C, H, K, Ht, bhat
 end
